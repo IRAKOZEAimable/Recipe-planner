@@ -297,6 +297,36 @@ const vegetarianFilter = document.querySelector("#vegetarianFilter");
 const recipeGrid = document.querySelector("#recipeGrid");
 const resultsSummary = document.querySelector("#resultsSummary");
 const emptyState = document.querySelector("#emptyState");
+
+loginForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const email = document.querySelector("#email").value.trim().toLowerCase();
+  const password = document.querySelector("#password").value;
+
+  const matchedUser = users.find(function (user) {
+    return user.email === email && user.password === password;
+  });
+
+  if (matchedUser) {
+    loginError.classList.add("hidden");
+    loginView.classList.add("hidden");
+    dashboardView.classList.remove("hidden");
+
+    updateStats();
+    renderRecipes();
+  } else {
+    loginError.textContent = "Incorrect email or password. Try again.";
+    loginError.classList.remove("hidden");
+  }
+});
+
+document.querySelector("#logoutButton").addEventListener("click", function () {
+  dashboardView.classList.add("hidden");
+  loginView.classList.remove("hidden");
+  loginForm.reset();
+  loginError.classList.add("hidden");
+});
   </script>
 
 </body>
