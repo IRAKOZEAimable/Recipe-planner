@@ -358,6 +358,39 @@ function updateStats() {
   vegetarianCount.textContent = totals.vegetarian;
 }
 
+// Filter by category, vegetarian status, and search
+
+function getVisibleRecipes() {
+  const selectedCategory = categoryFilter.value;
+  const vegetarianOnly = vegetarianFilter.checked;
+  const searchTerm = searchInput.value.trim().toLowerCase();
+
+  let visibleRecipes = recipes;
+
+  // Filter 1: category
+  if (selectedCategory !== "All") {
+    visibleRecipes = visibleRecipes.filter(function (recipe) {
+      return recipe.category === selectedCategory;
+    });
+  }
+
+  // Filter 2: vegetarian toggle
+  if (vegetarianOnly) {
+    visibleRecipes = visibleRecipes.filter(function (recipe) {
+      return recipe.isVegetarian === true;
+    });
+  }
+
+  // Filter 3: name search
+  if (searchTerm !== "") {
+    visibleRecipes = visibleRecipes.filter(function (recipe) {
+      return recipe.name.toLowerCase().includes(searchTerm);
+    });
+  }
+
+  return visibleRecipes;
+}
+
 
   </script>
 
