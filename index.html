@@ -451,6 +451,51 @@ function renderRecipes() {
   emptyState.classList.toggle("hidden", visibleRecipes.length !== 0);
 }
 
+// ADD A NEW RECIPE
+const recipeForm = document.querySelector("#recipeForm");
+const formMessage = document.querySelector("#formMessage");
+
+recipeForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const name = document.querySelector("#recipeName").value.trim();
+  const category = document.querySelector("#recipeCategory").value;
+  const prepTime = Number(document.querySelector("#prepTime").value);
+  const calories = Number(document.querySelector("#calories").value);
+  const isVegetarian = document.querySelector("#isVegetarian").checked;
+
+  if (
+    name === "" ||
+    !Number.isInteger(prepTime) ||
+    prepTime < 1 ||
+    !Number.isInteger(calories) ||
+    calories < 1
+  ) {
+    formMessage.textContent = "Enter valid recipe details.";
+    formMessage.className = "mt-3 text-sm text-red-600";
+    return;
+  }
+
+  recipes.push({
+    name: name,
+    category: category,
+    prepTime: prepTime,
+    calories: calories,
+    isVegetarian: isVegetarian
+  });
+
+  updateStats();
+  renderRecipes();
+
+  recipeForm.reset();
+
+  document.querySelector("#prepTime").value = 20;
+  document.querySelector("#calories").value = 300;
+
+  formMessage.textContent = "Recipe added successfully!";
+  formMessage.className = "mt-3 text-sm text-emerald-700";
+});
+
   </script>
 
 </body>
