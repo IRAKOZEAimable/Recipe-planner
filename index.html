@@ -281,6 +281,7 @@ const recipes = [
   { name: "Chicken Spring Rolls", category: "Snack", prepTime: 35, calories: 350, isVegetarian: false }
 ];
 
+// CONNECT JAVACRIPT TO HTML
 const loginView = document.querySelector("#loginView");
 const dashboardView = document.querySelector("#dashboardView");
 const loginForm = document.querySelector("#loginForm");
@@ -297,6 +298,8 @@ const vegetarianFilter = document.querySelector("#vegetarianFilter");
 const recipeGrid = document.querySelector("#recipeGrid");
 const resultsSummary = document.querySelector("#resultsSummary");
 const emptyState = document.querySelector("#emptyState");
+
+// MAKING LOGIN WORK
 
 loginForm.addEventListener("submit", function (event) {
   event.preventDefault();
@@ -327,6 +330,35 @@ document.querySelector("#logoutButton").addEventListener("click", function () {
   loginForm.reset();
   loginError.classList.add("hidden");
 });
+
+// CALCULATE THE STATISTICS USING reduce()
+
+function updateStats() {
+  const totals = recipes.reduce(function (accumulator, recipe) {
+    accumulator.prepTime += recipe.prepTime;
+    accumulator.calories += recipe.calories;
+
+    if (recipe.isVegetarian) {
+      accumulator.vegetarian += 1;
+    }
+
+    return accumulator;
+  }, {
+    prepTime: 0,
+    calories: 0,
+    vegetarian: 0
+  });
+
+  const average = recipes.length > 0
+    ? Math.round(totals.prepTime / recipes.length)
+    : 0;
+
+  averagePrep.textContent = average;
+  totalCalories.textContent = totals.calories.toLocaleString();
+  vegetarianCount.textContent = totals.vegetarian;
+}
+
+
   </script>
 
 </body>
