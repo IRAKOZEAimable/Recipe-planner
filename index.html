@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Planner</title>
+
+  <!-- Tailwind CSS for this learning project -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-stone-50 text-stone-900">
+
+  <!-- VIEW 1: LOGIN -->
+  <section id="loginView"
+    class="min-h-screen grid place-items-center p-4">
+
+    <form id="loginForm"
+      class="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+
+      <div class="mb-6 text-center">
+        <div class="text-4xl">🍲</div>
+        <h1 class="mt-3 text-3xl font-bold">Recipe Planner</h1>
+        <p class="mt-2 text-stone-500">
+          Sign in to manage your recipes.
+        </p>
+      </div>
+
+      <label for="email" class="mb-1 block font-medium">
+        Email
+      </label>
+      <input id="email" type="email" required
+        class="mb-4 w-full rounded-lg border p-3"
+        placeholder="aimable@example.com">
+
+      <label for="password" class="mb-1 block font-medium">
+        Password
+      </label>
+      <input id="password" type="password" required
+        class="mb-4 w-full rounded-lg border p-3"
+        placeholder="Enter password">
+
+      <p id="loginError"
+        class="mb-3 hidden text-sm text-red-600">
+      </p>
+
+      <button type="submit"
+        class="w-full rounded-lg bg-emerald-700 p-3
+               font-semibold text-white hover:bg-emerald-800">
+        Log in
+      </button>
+
+      <p class="mt-5 text-xs leading-5 text-stone-500">
+        Demo: aimable@example.com / Recipe123
+      </p>
+    </form>
+  </section>
+
+
+  <!-- VIEW 2: DASHBOARD (hidden until login succeeds) -->
+  <section id="dashboardView" class="hidden">
+
+    <header class="border-b bg-white">
+      <div class="mx-auto flex max-w-7xl items-center
+                  justify-between p-4">
+        <h1 class="text-xl font-bold">🍲 Recipe Planner</h1>
+
+        <button id="logoutButton"
+          class="rounded-lg border px-4 py-2 hover:bg-stone-100">
+          Log out
+        </button>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl p-4 sm:p-6">
+
+      <div class="mb-6">
+        <h2 class="text-3xl font-bold">
+          Your recipe dashboard
+        </h2>
+        <p class="mt-2 text-stone-500">
+          Discover, search, and organise your favourite meals.
+        </p>
+      </div>
+
+      <!-- STATISTICS -->
+      <section class="grid grid-cols-1 gap-4
+                      sm:grid-cols-2 xl:grid-cols-3">
+
+        <article class="rounded-xl bg-white p-5 shadow-sm">
+          <p class="text-sm text-stone-500">Average prep time</p>
+          <p class="mt-2 text-3xl font-bold">
+            <span id="averagePrep">0</span> min
+          </p>
+        </article>
+
+        <article class="rounded-xl bg-white p-5 shadow-sm">
+          <p class="text-sm text-stone-500">Total calories</p>
+          <p id="totalCalories" class="mt-2 text-3xl font-bold">
+            0
+          </p>
+        </article>
+
+        <article class="rounded-xl bg-white p-5 shadow-sm">
+          <p class="text-sm text-stone-500">Vegetarian recipes</p>
+          <p id="vegetarianCount" class="mt-2 text-3xl font-bold">
+            0
+          </p>
+        </article>
+
+      </section>
+
+
+      <!-- SEARCH AND FILTERS -->
+      <section class="mt-8 rounded-xl bg-white p-5 shadow-sm">
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+
+          <div>
+            <label for="searchInput"
+              class="mb-2 block font-medium">
+              Search by recipe name
+            </label>
+            <input id="searchInput" type="search"
+              placeholder="Search recipes..."
+              class="w-full rounded-lg border p-3">
+          </div>
+
+          <div>
+            <label for="categoryFilter"
+              class="mb-2 block font-medium">
+              Filter by category
+            </label>
+            <select id="categoryFilter"
+              class="w-full rounded-lg border bg-white p-3">
+              <option value="All">All categories</option>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
+              <option value="Snack">Snack</option>
+            </select>
+          </div>
+
+        </div>
+
+        <label class="mt-4 flex items-center gap-2">
+          <input id="vegetarianFilter" type="checkbox"
+            class="h-4 w-4 accent-emerald-700">
+          <span>Show vegetarian recipes only</span>
+        </label>
+
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <p id="resultsSummary" class="text-sm text-stone-500">
+            Showing recipes
+          </p>
+
+          <button id="clearFilters"
+            class="text-sm font-semibold text-emerald-700">
+            Clear filters
+          </button>
+        </div>
+      </section>
+
+
+      <!-- RECIPE LIST: JavaScript creates the cards -->
+      <section id="recipeGrid"
+        class="mt-6 grid grid-cols-1 gap-4
+               sm:grid-cols-2 xl:grid-cols-3">
+      </section>
+
+      <p id="emptyState"
+        class="mt-6 hidden rounded-xl bg-white p-8 text-center">
+        No recipes found. Try changing your filters.
+      </p>
+
+
+      <!-- ADD RECIPE FORM -->
+      <section class="mt-8 rounded-xl bg-white p-5 shadow-sm">
+        <h2 class="text-xl font-bold">Add a recipe</h2>
+        <p class="mt-1 text-sm text-stone-500">
+          Add a new recipe to your collection.
+        </p>
+
+        <form id="recipeForm"
+          class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+
+          <div>
+            <label for="recipeName" class="mb-1 block font-medium">
+              Recipe name
+            </label>
+            <input id="recipeName" required
+              class="w-full rounded-lg border p-3"
+              placeholder="e.g. Pumpkin soup">
+          </div>
+
+          <div>
+            <label for="recipeCategory"
+              class="mb-1 block font-medium">
+              Category
+            </label>
+            <select id="recipeCategory"
+              class="w-full rounded-lg border bg-white p-3">
+              <option>Breakfast</option>
+              <option>Lunch</option>
+              <option>Dinner</option>
+              <option>Snack</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="prepTime" class="mb-1 block font-medium">
+              Prep time (minutes)
+            </label>
+            <input id="prepTime" type="number" min="1"
+              max="600" step="1" value="20" required
+              class="w-full rounded-lg border p-3">
+          </div>
+
+          <div>
+            <label for="calories" class="mb-1 block font-medium">
+              Calories per serving
+            </label>
+            <input id="calories" type="number" min="1"
+              max="5000" step="1" value="300" required
+              class="w-full rounded-lg border p-3">
+          </div>
+
+          <label class="flex items-center gap-2">
+            <input id="isVegetarian" type="checkbox"
+              class="h-4 w-4 accent-emerald-700">
+            Vegetarian recipe
+          </label>
+
+          <div class="md:col-span-2">
+            <button type="submit"
+              class="rounded-lg bg-emerald-700 px-5 py-3
+                     font-semibold text-white hover:bg-emerald-800">
+              Add recipe
+            </button>
+            <p id="formMessage" class="mt-3 text-sm"></p>
+          </div>
+
+        </form>
+      </section>
+
+      <footer class="py-8 text-center text-sm text-stone-500">
+        Recipe Planner · Built with HTML, Tailwind CSS, and JavaScript
+      </footer>
+
+    </main>
+  </section>
+
+
+  <script>
+    // JAVASCRIPT GOES HERE
+  </script>
+
+</body>
+</html>
