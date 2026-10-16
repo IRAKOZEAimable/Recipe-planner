@@ -391,6 +391,65 @@ function getVisibleRecipes() {
   return visibleRecipes;
 }
 
+searchInput.addEventListener("input", renderRecipes);
+categoryFilter.addEventListener("change", renderRecipes);
+vegetarianFilter.addEventListener("change", renderRecipes);
+
+document.querySelector("#clearFilters").addEventListener("click", function () {
+  searchInput.value = "";
+  categoryFilter.value = "All";
+  vegetarianFilter.checked = false;
+
+  renderRecipes();
+});
+
+// Render the recipe cards
+
+function renderRecipes() {
+  const visibleRecipes = getVisibleRecipes();
+
+  // Remove the cards from the previous render.
+  recipeGrid.replaceChildren();
+
+  visibleRecipes.forEach(function (recipe) {
+    const card = document.createElement("article");
+    card.className =
+      "rounded-xl border border-stone-200 bg-white p-5 shadow-sm";
+
+    const title = document.createElement("h3");
+    title.className = "text-lg font-bold";
+    title.textContent = recipe.name;
+
+    const category = document.createElement("p");
+    category.className = "mt-2 text-sm text-emerald-700";
+    category.textContent = recipe.category;
+
+    const details = document.createElement("p");
+    details.className = "mt-4 text-sm text-stone-600";
+    details.textContent =
+      "Prep: " + recipe.prepTime + " min";
+
+    const calories = document.createElement("p");
+    calories.className = "mt-2 text-sm text-stone-600";
+    calories.textContent =
+      "Calories per serving: " + recipe.calories;
+
+    const vegetarian = document.createElement("p");
+    vegetarian.className = "mt-3 text-sm font-medium";
+    vegetarian.textContent = recipe.isVegetarian
+      ? "🥬 Vegetarian"
+      : "🍗 Non-vegetarian";
+
+    card.append(title, category, details, calories, vegetarian);
+    recipeGrid.appendChild(card);
+  });
+
+  resultsSummary.textContent =
+    "Showing " + visibleRecipes.length +
+    " of " + recipes.length + " recipes";
+
+  emptyState.classList.toggle("hidden", visibleRecipes.length !== 0);
+}
 
   </script>
 
