@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Planner Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+  <!-- LOGIN VIEW -->
+  <section id="loginView"
+    class="min-h-screen flex items-center justify-center p-5 bg-gradient-to-br from-emerald-50 to-teal-100">
+
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 sm:p-10">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
+          🍲
+        </div> 
+        <h1 class="text-3xl font-bold text-slate-900">Recipe Planner</h1>
+        <p class="text-slate-500 mt-2">Sign in to plan your meals</p>
+      </div>
+
+      <form id="loginForm" class="space-y-5">
+        <div>
+          <label for="email" class="block text-sm font-semibold mb-2">
+            Email address
+          </label>
+          <input id="email" type="email" required
+            placeholder="you@example.com"
+            autocomplete="off"
+            class="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-semibold mb-2">
+            Password
+          </label>
+          <input id="password" type="password" required
+            placeholder="Enter your password"
+            autocomplete="off"
+            class="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <p id="loginError" class="hidden text-sm text-red-600" role="alert">
+          Invalid email or password. Please try again.
+        </p>
+
+        <button type="submit"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition">
+          Sign In
+        </button>
+      </form>
+
+      <div class="mt-6 p-4 bg-slate-50 rounded-xl text-sm">
+        <p class="font-semibold mb-2">login credentials</p>
+        <p class="text-slate-600">Email: pawulo@example.com</p>
+        <p class="text-slate-600">Password: pawulo123</p>
+      </div>
+
+      <p class="text-xs text-slate-400 text-center mt-5">
+        Educational demo only — not secure authentication.
+      </p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD VIEW -->
+  <section id="dashboardView" class="hidden min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-2xl">
+            🍲
+          </div>
+          <div>
+            <h1 class="text-xl sm:text-2xl font-bold">Recipe Planner</h1>
+            <p class="text-sm text-slate-500">Your meals, organized</p>
+          </div>
+        </div>
+
+        <button id="logoutBtn"
+          class="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 font-medium">
+          Sign Out
+        </button>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+      <!-- WELCOME -->
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
+        <div>
+          <p class="text-emerald-700 font-semibold text-sm">YOUR KITCHEN OVERVIEW</p>
+          <h2 class="text-3xl font-bold mt-1">Meal dashboard</h2>
+          <p class="text-slate-500 mt-2">Explore recipes and plan something delicious.</p>
+        </div>
+        <p id="recipeCount" class="text-sm text-slate-500"></p>
+      </div>
+
+      <!-- STATISTICS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center justify-between">
+            <p class="text-slate-500 font-medium">Average prep time</p>
+            <span class="text-2xl">⏱️</span>
+          </div>
+          <p class="text-3xl font-bold mt-4">
+            <span id="averagePrep">0</span>
+            <span class="text-base font-medium text-slate-500">min</span>
+          </p>
+          <p class="text-sm text-slate-400 mt-2">Across all recipes</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center justify-between">
+            <p class="text-slate-500 font-medium">Total calories</p>
+            <span class="text-2xl">🔥</span>
+          </div>
+          <p class="text-3xl font-bold mt-4">
+            <span id="totalCalories">0</span>
+            <span class="text-base font-medium text-slate-500">kcal</span>
+          </p>
+          <p class="text-sm text-slate-400 mt-2">Sum of recipe calories</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center justify-between">
+            <p class="text-slate-500 font-medium">Vegetarian recipes</p>
+            <span class="text-2xl">🥗</span>
+          </div>
+          <p class="text-3xl font-bold mt-4" id="vegetarianCount">0</p>
+          <p class="text-sm text-slate-400 mt-2">Plant-based choices</p>
+        </div>
+      </div>
+
+      <!-- ADD RECIPE FORM -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 mb-8 shadow-sm">
+        <div class="mb-5">
+          <h3 class="text-xl font-bold">Add a new recipe</h3>
+          <p class="text-sm text-slate-500 mt-1">
+            Add your recipe to the collection.
+          </p>
+        </div>
+
+        <form id="recipeForm"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+
+          <div>
+            <label for="recipeName" class="block text-sm font-medium mb-2">
+              Recipe name
+            </label>
+            <input id="recipeName" type="text" required maxlength="80"
+              placeholder="e.g. Vegetable soup"
+              class="w-full rounded-xl border border-slate-200 px-3 py-3 focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+
+          <div>
+            <label for="recipeCategory" class="block text-sm font-medium mb-2">
+              Category
+            </label>
+            <select id="recipeCategory" required
+              class="w-full rounded-xl border border-slate-200 px-3 py-3 bg-white outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
+              <option value="Snack">Snack</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="recipePrep" class="block text-sm font-medium mb-2">
+              Prep time (min)
+            </label>
+            <input id="recipePrep" type="number" required min="1" max="1440"
+              placeholder="20"
+              class="w-full rounded-xl border border-slate-200 px-3 py-3 outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+
+          <div>
+            <label for="recipeCalories" class="block text-sm font-medium mb-2">
+              Calories (kcal)
+            </label>
+            <input id="recipeCalories" type="number" required min="0" max="10000"
+              placeholder="350"
+              class="w-full rounded-xl border border-slate-200 px-3 py-3 outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+
+          <div class="flex flex-col justify-end gap-3">
+            <label class="flex items-center gap-2 text-sm">
+              <input id="recipeVegetarian" type="checkbox"
+                class="w-4 h-4 accent-emerald-600">
+              Vegetarian
+            </label>
+            <button type="submit"
+              class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl px-4 py-3 transition">
+              + Add Recipe
+            </button>
+          </div>
+        </form>
+        <p id="addMessage" class="text-sm text-emerald-700 mt-3" role="status"></p>
+      </div>
+
+      <!-- RECIPE LIST -->
+      <section class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h3 class="text-xl font-bold">Your recipes</h3>
+            <p class="text-sm text-slate-500 mt-1">Search and filter your collection.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:w-2/3">
+            <input id="searchInput" type="search"
+              placeholder="🔍 Search recipe name..."
+              class="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500">
+
+            <select id="categoryFilter"
+              class="w-full rounded-xl border border-slate-200 px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-emerald-500">
+              <option value="All">All categories</option>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
+              <option value="Snack">Snack</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input id="vegetarianFilter" type="checkbox"
+              class="w-5 h-5 accent-emerald-600">
+            <span class="font-medium text-sm">Show vegetarian recipes only</span>
+          </label>
+
+          <button id="resetFiltersBtn"
+            class="text-sm font-semibold text-emerald-700 hover:text-emerald-900">
+            Reset filters
+          </button>
+        </div>
+
+        <p id="visibleCount" class="text-sm text-slate-500 mb-4"></p>
+
+        <div id="recipeList"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        </div>
+
+        <div id="emptyState" class="hidden text-center py-12">
+          <div class="text-5xl mb-4">🍽️</div>
+          <h4 class="font-bold text-lg">No recipes found</h4>
+          <p class="text-slate-500 mt-2">Try another search or change your filters.</p>
+        </div>
+      </section>
+
+      <footer class="text-center text-sm text-slate-400 py-8">
+        Recipe Planner · Made for your kitchen
+      </footer>
+    </main>
+  </section>
+
+
+  <script>
+    // 1. LOGIN USERS: DEMO ONLY
+    const users = [
+      { email: "pawulo@example.com", password: "pawulo123" },
+      { email: "chef@example.com", password: "chef123" },
+      { email: "user@example.com", password: "user123" }
+    ];
+
+   
+    let recipes = [
+      { name: "Oatmeal with Banana", category: "Breakfast", prepTime: 10, calories: 280, isVegetarian: true },
+      { name: "Vegetable Omelette", category: "Breakfast", prepTime: 15, calories: 320, isVegetarian: false },
+      { name: "Pancakes", category: "Breakfast", prepTime: 20, calories: 410, isVegetarian: true },
+      { name: "Avocado Toast", category: "Breakfast", prepTime: 8, calories: 250, isVegetarian: true },
+      { name: "Chicken Salad", category: "Lunch", prepTime: 25, calories: 390, isVegetarian: false },
+      { name: "Jollof Rice", category: "Lunch", prepTime: 40, calories: 520, isVegetarian: true },
+      { name: "Bean Burrito", category: "Lunch", prepTime: 20, calories: 430, isVegetarian: true },
+      { name: "Grilled Fish", category: "Dinner", prepTime: 30, calories: 360, isVegetarian: false },
+      { name: "Vegetable Stir Fry", category: "Dinner", prepTime: 20, calories: 310, isVegetarian: true },
+      { name: "Beef Stew", category: "Dinner", prepTime: 55, calories: 480, isVegetarian: false },
+      { name: "Lentil Curry", category: "Dinner", prepTime: 35, calories: 400, isVegetarian: true },
+      { name: "Fruit Salad", category: "Snack", prepTime: 10, calories: 150, isVegetarian: true },
+      { name: "Yogurt Parfait", category: "Snack", prepTime: 5, calories: 220, isVegetarian: true },
+      { name: "Chicken Sandwich", category: "Snack", prepTime: 12, calories: 340, isVegetarian: false },
+      { name: "Roasted Nuts", category: "Snack", prepTime: 10, calories: 180, isVegetarian: true }
+    ];
+
+    // 3. SELECT DOM ELEMENTS
+    const loginView = document.getElementById("loginView");
+    const dashboardView = document.getElementById("dashboardView");
+    const loginForm = document.getElementById("loginForm");
+    const loginError = document.getElementById("loginError");
+
+    const averagePrep = document.getElementById("averagePrep");
+    const totalCalories = document.getElementById("totalCalories");
+    const vegetarianCount = document.getElementById("vegetarianCount");
+    const recipeCount = document.getElementById("recipeCount");
+
+    const recipeForm = document.getElementById("recipeForm");
+    const recipeList = document.getElementById("recipeList");
+    const emptyState = document.getElementById("emptyState");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const vegetarianFilter = document.getElementById("vegetarianFilter");
+    const visibleCount = document.getElementById("visibleCount");
+    const addMessage = document.getElementById("addMessage");
+
+
+
+
+    // 4. LOGIN: MATCH AGAINST THE USERS ARRAY
+    loginForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+
+      const matchedUser = users.find(function (user) {
+        return user.email.toLowerCase() === email &&
+               user.password === password;
+      });
+
+      if (matchedUser) {
+        loginError.classList.add("hidden");
+        loginView.classList.add("hidden");
+        dashboardView.classList.remove("hidden");
+        loginForm.reset();
+        renderDashboard();
+      } else {
+        loginError.classList.remove("hidden");
+      }
+    });
+
+    // 5. LOG OUT
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+      dashboardView.classList.add("hidden");
+      loginView.classList.remove("hidden");
+      loginForm.reset();
+      loginError.classList.add("hidden");
+    });
+
+    // 6. CALCULATE ALL STATISTICS USING REDUCE
+    function renderStats() {
+      const stats = recipes.reduce(function (totals, recipe) {
+        totals.prepTime += recipe.prepTime;
+        totals.calories += recipe.calories;
+
+        if (recipe.isVegetarian) {
+          totals.vegetarian += 1;
+        }
+
+        return totals;
+      }, {
+        prepTime: 0,
+        calories: 0,
+        vegetarian: 0
+      });
+
+      const average = recipes.length
+        ? Math.round(stats.prepTime / recipes.length)
+        : 0;
+
+      averagePrep.textContent = average;
+      totalCalories.textContent = stats.calories.toLocaleString();
+      vegetarianCount.textContent = stats.vegetarian;
+      recipeCount.textContent = recipes.length + " recipes in your collection";
+    }
+
+    // 7. FILTER RECIPES
+    // Category, vegetarian status and search are independent conditions.
+    function getFilteredRecipes() {
+      const category = categoryFilter.value;
+      const vegetarianOnly = vegetarianFilter.checked;
+      const searchTerm = searchInput.value.trim().toLowerCase();
+
+      let result = recipes;
+
+      if (category !== "All") {
+        result = result.filter(function (recipe) {
+          return recipe.category === category;
+        });
+      }
+
+      if (vegetarianOnly) {
+        result = result.filter(function (recipe) {
+          return recipe.isVegetarian === true;
+        });
+      }
+
+      if (searchTerm !== "") {
+        result = result.filter(function (recipe) {
+          return recipe.name.toLowerCase().includes(searchTerm);
+        });
+      }
+
+      return result;
+    }
+
+    // Escape user-provided text before placing it in HTML.
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, function (character) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[character];
+      });
+    }
+
+    // 8. DISPLAY RECIPE CARDS
+    function renderRecipes() {
+      const filteredRecipes = getFilteredRecipes();
+
+      recipeList.innerHTML = filteredRecipes.map(function (recipe) {
+        const vegetarianBadge = recipe.isVegetarian
+          ? '<span class="px-3 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-full">Vegetarian</span>'
+          : '<span class="px-3 py-1 text-xs font-semibold bg-orange-100 text-orange-700 rounded-full">Non-vegetarian</span>';
+
+        const categoryColors = {
+          Breakfast: "bg-amber-50 text-amber-700",
+          Lunch: "bg-sky-50 text-sky-700",
+          Dinner: "bg-violet-50 text-violet-700",
+          Snack: "bg-pink-50 text-pink-700"
+        };
+
+        const categoryClass =
+          categoryColors[recipe.category] || "bg-slate-100 text-slate-700";
+
+        return `
+          <article class="rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:border-emerald-200 transition">
+            <div class="flex items-start justify-between gap-3 mb-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold ${categoryClass}">
+                ${escapeHTML(recipe.category)}
+              </span>
+              <span class="text-2xl" aria-hidden="true">🍴</span>
+            </div>
+
+            <h4 class="font-bold text-lg text-slate-900 break-words">
+              ${escapeHTML(recipe.name)}
+            </h4>
+
+            <div class="flex items-center gap-4 text-sm text-slate-500 mt-4 mb-5">
+              <span>⏱️ ${recipe.prepTime} min</span>
+              <span>🔥 ${recipe.calories} kcal</span>
+            </div>
+
+            ${vegetarianBadge}
+          </article>
+        `;
+      }).join("");
+
+      emptyState.classList.toggle("hidden", filteredRecipes.length !== 0);
+      visibleCount.textContent =
+        "Showing " + filteredRecipes.length + " of " + recipes.length + " recipes";
+    }
+
+    // 9. RE-RENDER ALL DATA FROM THE SAME ARRAY
+    function renderDashboard() {
+      renderStats();
+      renderRecipes();
+    }
+
+    // 10. ADD A RECIPE
+    recipeForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("recipeName").value.trim();
+      const category = document.getElementById("recipeCategory").value;
+      const prepTime = Number(document.getElementById("recipePrep").value);
+      const calories = Number(document.getElementById("recipeCalories").value);
+      const isVegetarian = document.getElementById("recipeVegetarian").checked;
+
+      if (
+        !name ||
+        !["Breakfast", "Lunch", "Dinner", "Snack"].includes(category) ||
+        !Number.isInteger(prepTime) || prepTime < 1 || prepTime > 1440 ||
+        !Number.isInteger(calories) || calories < 0 || calories > 10000
+      ) {
+        addMessage.textContent = "Please enter valid recipe details.";
+        addMessage.classList.remove("text-emerald-700");
+        addMessage.classList.add("text-red-600");
+        return;
+      }
+
+      // Add the new record to the single source-of-truth array.
+      recipes.push({
+        name: name,
+        category: category,
+        prepTime: prepTime,
+        calories: calories,
+        isVegetarian: isVegetarian
+      });
+
+      recipeForm.reset();
+      addMessage.textContent = '"' + name + '" was added successfully!';
+      addMessage.classList.remove("text-red-600");
+      addMessage.classList.add("text-emerald-700");
+
+      // Show the new recipe immediately, regardless of old filters.
+      searchInput.value = "";
+      categoryFilter.value = "All";
+      vegetarianFilter.checked = false;
+
+      renderDashboard();
+    });
+
+    // 11. LIVE SEARCH AND FILTERS
+    searchInput.addEventListener("input", renderRecipes);
+    categoryFilter.addEventListener("change", renderRecipes);
+    vegetarianFilter.addEventListener("change", renderRecipes);
+
+    // 12. RESET FILTERS
+    document.getElementById("resetFiltersBtn").addEventListener("click", function () {
+      searchInput.value = "";
+      categoryFilter.value = "All";
+      vegetarianFilter.checked = false;
+      renderRecipes();
+    });
+  </script>
+
+</body>
+</html>
