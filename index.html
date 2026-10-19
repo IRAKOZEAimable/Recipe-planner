@@ -264,7 +264,7 @@ const users = [
 
 // One source of truth for all recipe data.
 const recipes = [
-  { name: "Banana Oat Pancakes", category: "Breakfast", prepTime: 15, calories: 320, isVegetarian: true },
+  { name: "Banana Oat Pancakes", category: "Breakfast", prepTime: 15, calories: 320, isVegetarian: true, image: "images/banana pancakes.jpeg" },
   { name: "Avocado Toast", category: "Breakfast", prepTime: 10, calories: 280, isVegetarian: true },
   { name: "Veggie Omelette", category: "Breakfast", prepTime: 12, calories: 240, isVegetarian: true },
   { name: "Chicken Rice Bowl", category: "Lunch", prepTime: 30, calories: 540, isVegetarian: false },
@@ -280,6 +280,14 @@ const recipes = [
   { name: "Peanut Butter Banana Bites", category: "Snack", prepTime: 8, calories: 230, isVegetarian: true },
   { name: "Chicken Spring Rolls", category: "Snack", prepTime: 35, calories: 350, isVegetarian: false }
 ];
+
+// const image = document.createElement("img");
+
+// image.src = recipe.image;
+// image.alt = recipe.name;
+// image.className = "w-full h-48 object-cover";
+
+// card.appendChild(image);
 
 // CONNECT JAVACRIPT TO HTML
 const loginView = document.querySelector("#loginView");
